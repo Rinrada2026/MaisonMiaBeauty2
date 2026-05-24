@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "jJUWM7JMDTvGqzK6cY-YI"
+uri = "file://artifacts/beauty-site/public/images/hero.png"
+type = "image"
+title = "Hero model beauty shot"
+
+[[generated]]
+id = "x70v_lu0lhiNivXytEY4d"
+uri = "file://artifacts/beauty-site/public/images/product-1.png"
+type = "image"
+title = "Lash product 1"
+
+[[generated]]
+id = "mMufJyBrZHQbzaUmgqPvM"
+uri = "file://artifacts/beauty-site/public/images/product-2.png"
+type = "image"
+title = "Lash product 2"
+
+[[generated]]
+id = "ghbk7O7wGQNzsLvGT_MyG"
+uri = "file://artifacts/beauty-site/public/images/product-3.png"
+type = "image"
+title = "Lash product 3"
+
+[[generated]]
+id = "eAAZIm7KIsLnSF2A_Bq9F"
+uri = "file://artifacts/beauty-site/public/images/product-4.png"
+type = "image"
+title = "Lash product 4"
+
+[[generated]]
+id = "70bObHkW4z1gA1TXQjRpP"
+uri = "file://artifacts/beauty-site/public/images/banner.png"
+type = "image"
+title = "Silk banner background"
