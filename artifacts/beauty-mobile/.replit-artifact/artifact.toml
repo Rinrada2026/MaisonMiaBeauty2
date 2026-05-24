@@ -1,0 +1,27 @@
+kind = "mobile"
+previewPath = "/mobile/"
+title = "Beauty Mobile App"
+version = "1.0.0"
+id = "artifacts/beauty-mobile"
+router = "expo-domain"
+
+[[integratedSkills]]
+name = "expo"
+version = "1.0.0"
+
+[[services]]
+ensurePreviewReachable = "/status"
+name = "expo"
+paths = [ "/mobile/" ]
+localPort = 22777
+
+[services.development]
+run = "pnpm --filter @workspace/beauty-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/beauty-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/beauty-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "22777"
+BASE_PATH = "/mobile/"
