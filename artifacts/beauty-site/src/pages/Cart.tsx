@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 
 export default function Cart() {
-  const { items, removeItem, updateQuantity, total, itemCount } = useCart();
+  const { items, removeItem, updateQuantity, total, itemCount, checkout, isCheckingOut } = useCart();
   
   const freeShippingThreshold = 80;
   const progress = Math.min(100, (total / freeShippingThreshold) * 100);
@@ -110,8 +110,12 @@ export default function Cart() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-xs uppercase">
-                  CHECKOUT
+                <Button
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-xs uppercase disabled:opacity-60"
+                  onClick={checkout}
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? "REDIRECTING..." : "CHECKOUT"}
                 </Button>
                 <Button className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-none flex items-center justify-center gap-2">
                   Buy with <span className="font-bold tracking-tight text-sm">Apple Pay</span>

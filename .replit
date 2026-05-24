@@ -28,5 +28,15 @@ localPort = 8081
 externalPort = 8081
 
 [[ports]]
+localPort = 8082
+externalPort = 3001
+
+[[ports]]
 localPort = 19647
 externalPort = 3000
+
+[userenv]
+
+[userenv.shared]
+VITE_SHOPIFY_STORE_DOMAIN = "maisonmiabeauty.myshopify.com"
+VITE_SHOPIFY_STOREFRONT_TOKEN = "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"

@@ -1,7 +1,9 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createCheckout } from "@/lib/shopify";
 
 export type CartItem = {
   productId: string;
+  variantId: string;
   name: string;
   style: string;
   price: number;
@@ -16,6 +18,8 @@ interface CartContextType {
   updateQuantity: (productId: string, quantity: number) => void;
   total: number;
   itemCount: number;
+  checkout: () => Promise<void>;
+  isCheckingOut: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,6 +33,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [];
     }
   });
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("maison-mia-cart", JSON.stringify(items));
@@ -63,11 +68,37 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const checkout = async () => {
+    if (items.length === 0) return;
+    setIsCheckingOut(true);
+    try {
+      const lines = items
+        .filter((item) => item.variantId)
+        .map((item) => ({
+          merchandiseId: item.variantId,
+          quantity: item.quantity,
+        }));
+
+      if (lines.length === 0) {
+        window.location.href = `https://${import.meta.env.VITE_SHOPIFY_STORE_DOMAIN}/cart`;
+        return;
+      }
+
+      const checkoutUrl = await createCheckout(lines);
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error("Checkout error:", error);
+      window.location.href = `https://${import.meta.env.VITE_SHOPIFY_STORE_DOMAIN}/cart`;
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, total, itemCount }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, total, itemCount, checkout, isCheckingOut }}>
       {children}
     </CartContext.Provider>
   );
