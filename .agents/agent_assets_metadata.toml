@@ -36,3 +36,15 @@ id = "70bObHkW4z1gA1TXQjRpP"
 uri = "file://artifacts/beauty-site/public/images/banner.png"
 type = "image"
 title = "Silk banner background"
+
+[[generated]]
+id = "39-ws3Y72pbN0lgNm0mMJ"
+uri = "file://artifacts/beauty-site/public/images/product-5.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "DoWG_wjZXcIT_hswESIPh"
+uri = "file://artifacts/beauty-site/public/images/product-6.png"
+type = "image"
+title = "generated_image"
