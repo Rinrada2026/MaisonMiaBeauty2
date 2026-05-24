@@ -1,4 +1,4 @@
-import { Menu, Search, ShoppingBag } from "lucide-react";
+import { Search, ShoppingBag } from "lucide-react";
 import { Link } from "wouter";
 import { useCart } from "@/context/CartContext";
 import logoSrc from "/images/maison-mia-logo.png";
@@ -8,11 +8,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border h-16 flex items-center px-4 justify-between" data-testid="header">
-      <div className="flex-1 flex items-center justify-start">
-        <button className="p-2 -ml-2" data-testid="btn-menu">
-          <Menu className="w-5 h-5 text-foreground" />
-        </button>
-      </div>
+      <div className="flex-1" />
 
       <div className="flex-1 flex justify-center">
         <Link href="/" data-testid="header-logo-link">
