@@ -39,4 +39,4 @@ externalPort = 3000
 
 [userenv.shared]
 VITE_SHOPIFY_STORE_DOMAIN = "maisonmiabeauty.myshopify.com"
-VITE_SHOPIFY_STOREFRONT_TOKEN = "atkn_d6af2ce4b3772d437f2b65d1d145779a53ff33d9ca14425a794e04349a672b55"
+VITE_SHOPIFY_STOREFRONT_TOKEN = "0fa7e5831197ccfef8a3c41f7c3dd071"
