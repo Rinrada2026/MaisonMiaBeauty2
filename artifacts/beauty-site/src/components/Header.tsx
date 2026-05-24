@@ -7,12 +7,12 @@ export default function Header() {
   const { itemCount } = useCart();
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-border h-16 flex items-center px-4 justify-between" data-testid="header">
+    <header className="sticky top-0 z-50 bg-white border-b border-border h-20 flex items-center px-4 justify-between" data-testid="header">
       <div className="flex-1" />
 
       <div className="flex-1 flex justify-center">
         <Link href="/" data-testid="header-logo-link">
-          <img src={logoSrc} alt="Maison Mia" className="h-16 object-contain" />
+          <img src={logoSrc} alt="Maison Mia" className="h-20 object-contain" />
         </Link>
       </div>
 
