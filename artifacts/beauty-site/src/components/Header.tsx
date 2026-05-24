@@ -16,7 +16,7 @@ export default function Header() {
 
       <div className="flex-1 flex justify-center">
         <Link href="/" data-testid="header-logo-link">
-          <img src={logoSrc} alt="Maison Mia" className="h-10 object-contain" />
+          <img src={logoSrc} alt="Maison Mia" className="h-16 object-contain" />
         </Link>
       </div>
 
