@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, User, ShoppingCart, Heart, Feather, ShieldCheck, Truck, ArrowRight, Truck as TruckIcon } from "lucide-react";
+import logoSrc from "/images/maison-mia-logo.png";
 
 export default function Home() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -61,10 +62,7 @@ export default function Home() {
           </nav>
 
           <div className="absolute left-1/2 -translate-x-1/2 text-center">
-            <span className="font-serif text-2xl tracking-[0.18em] leading-none" data-testid="brand-logo">
-              LUMI MIA
-              <span className="block text-[10px] tracking-[0.4em] font-sans font-medium mt-0.5 text-foreground/70">BEAUTY</span>
-            </span>
+            <img src={logoSrc} alt="Maison Mia Beauty" className="h-12 w-auto object-contain" data-testid="brand-logo" />
           </div>
 
           <div className="flex items-center gap-5">
@@ -258,8 +256,7 @@ export default function Home() {
             {/* Brand */}
             <div className="lg:col-span-1">
               <div className="mb-5">
-                <span className="font-serif text-xl tracking-[0.18em]">LUMI MIA</span>
-                <span className="block text-[9px] tracking-[0.4em] font-sans font-medium mt-0.5 text-foreground/60">BEAUTY</span>
+                <img src={logoSrc} alt="Maison Mia Beauty" className="h-10 w-auto object-contain" />
               </div>
               <p className="text-muted-foreground text-[12px] leading-relaxed mb-6">
                 Enhancing your natural beauty with premium lashes that are effortless, elevated, and made for you.
@@ -330,7 +327,7 @@ export default function Home() {
 
           {/* Bottom bar */}
           <div className="pt-6 border-t border-border/30 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[11px] text-muted-foreground">&copy; {new Date().getFullYear()} Lumi Mia Beauty. All rights reserved.</p>
+            <p className="text-[11px] text-muted-foreground">&copy; {new Date().getFullYear()} Maison Mia Beauty. All rights reserved.</p>
             {/* Payment icons placeholder */}
             <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest">
               <span className="border border-border/50 px-2 py-0.5 rounded-sm">Visa</span>
