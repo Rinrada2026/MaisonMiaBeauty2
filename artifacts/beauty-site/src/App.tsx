@@ -14,6 +14,7 @@ import Shop from "@/pages/Shop";
 import ProductDetail from "@/pages/ProductDetail";
 import Cart from "@/pages/Cart";
 import Favorites from "@/pages/Favorites";
+import Account from "@/pages/Account";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ function Router() {
           <Route path="/product/:id" component={ProductDetail} />
           <Route path="/cart" component={Cart} />
           <Route path="/favorites" component={Favorites} />
+          <Route path="/account" component={Account} />
           <Route component={NotFound} />
         </Switch>
       </div>

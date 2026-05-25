@@ -28,10 +28,10 @@ export default function BottomNav() {
           </div>
           <span className="text-[10px] font-medium tracking-wide">FAVORITES</span>
         </Link>
-        <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground" data-testid="nav-account">
-          <User className="w-5 h-5" strokeWidth={1.5} />
+        <Link href="/account" className={`flex flex-col items-center justify-center w-full h-full gap-1 ${location === "/account" ? "text-primary" : "text-muted-foreground"}`} data-testid="nav-account">
+          <User className="w-5 h-5" strokeWidth={location === "/account" ? 2 : 1.5} />
           <span className="text-[10px] font-medium tracking-wide">ACCOUNT</span>
-        </button>
+        </Link>
       </div>
     </div>
   );
