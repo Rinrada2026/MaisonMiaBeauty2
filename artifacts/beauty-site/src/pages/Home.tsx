@@ -3,16 +3,19 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { products } from "@/data/products";
 import { useCart } from "@/context/CartContext";
+import { useFavorites } from "@/context/FavoritesContext";
 
 export default function Home() {
   const [, setLocation] = useLocation();
   const { addItem } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const handleAddToCart = (e: React.MouseEvent, product: any) => {
     e.preventDefault();
     e.stopPropagation();
     addItem({
       productId: product.id,
+      variantId: "",
       name: product.name,
       style: product.style,
       price: product.price,
@@ -83,8 +86,11 @@ export default function Home() {
             <Link key={product.id} href={`/product/${product.id}`} className="snap-start shrink-0 w-[65vw] sm:w-[30vw] md:w-[22vw] flex flex-col group relative bg-white">
               <div className="relative aspect-square overflow-hidden bg-secondary">
                 <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply" />
-                <button className="absolute top-3 right-3 p-1.5 bg-white rounded-full shadow-sm text-muted-foreground hover:text-primary z-10" onClick={(e) => { e.preventDefault(); }}>
-                  <Heart className="w-4 h-4" />
+                <button
+                  className={`absolute top-3 right-3 p-1.5 bg-white rounded-full shadow-sm z-10 ${isFavorite(product.id) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite({ productId: product.id, variantId: "", name: product.name, style: product.style, price: product.price, image: product.image }); }}
+                >
+                  <Heart className="w-4 h-4" fill={isFavorite(product.id) ? "currentColor" : "none"} />
                 </button>
               </div>
               <div className="p-4 flex flex-col relative">
