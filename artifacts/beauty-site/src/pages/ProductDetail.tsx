@@ -189,7 +189,7 @@ export default function ProductDetail() {
             </button>
             {activeTab === "shipping" && (
               <div className="py-4 text-sm text-muted-foreground border-b border-border">
-                Information about shipping times, international delivery, and our 30-day return policy.
+                Information about shipping times, international delivery, and our 7-day return policy.
               </div>
             )}
           </div>

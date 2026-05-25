@@ -128,7 +128,7 @@ export default function Cart() {
                   <ShieldCheck className="w-4 h-4" /> Secure Checkout
                 </div>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                  <RefreshCw className="w-4 h-4" /> 30-Day Returns
+                  <RefreshCw className="w-4 h-4" /> 7-Day Returns
                 </div>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground">
                   <Star className="w-4 h-4" /> Trusted by 10,000+ Customers
