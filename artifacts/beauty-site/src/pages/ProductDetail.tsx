@@ -3,6 +3,7 @@ import { useParams } from "wouter";
 import { Heart, Truck, Feather, Rabbit, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import { useFavorites } from "@/context/FavoritesContext";
 import { useToast } from "@/hooks/use-toast";
 import { useShopifyProduct } from "@/hooks/useShopifyProducts";
 import { getProductPrice, getProductImage, getFirstVariantId } from "@/lib/shopify";
@@ -11,6 +12,7 @@ import { products as staticProducts } from "@/data/products";
 export default function ProductDetail() {
   const { id } = useParams();
   const { addItem } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"details" | "shipping" | null>(null);
@@ -154,8 +156,15 @@ export default function ProductDetail() {
               Buy with <span className="font-bold tracking-tight text-sm">Apple Pay</span>
             </Button>
 
-            <button className="flex items-center justify-center gap-2 mt-4 text-xs font-medium uppercase tracking-widest hover:text-primary transition-colors">
-              <Heart className="w-4 h-4" strokeWidth={1.5} /> Add to Wishlist
+            <button
+              onClick={() => {
+                const productId = shopifyProduct?.handle ?? staticProduct?.id ?? "";
+                toggleFavorite({ productId, variantId: shopifyProduct ? (getFirstVariantId(shopifyProduct) ?? "") : "", name, style, price, image });
+              }}
+              className={`flex items-center justify-center gap-2 mt-4 text-xs font-medium uppercase tracking-widest transition-colors ${isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "text-primary" : "hover:text-primary"}`}
+            >
+              <Heart className="w-4 h-4" strokeWidth={1.5} fill={isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "currentColor" : "none"} />
+              {isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "Saved to Wishlist" : "Add to Wishlist"}
             </button>
           </div>
 

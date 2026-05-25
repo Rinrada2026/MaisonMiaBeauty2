@@ -1,12 +1,14 @@
 import { Heart, Truck, Plus } from "lucide-react";
 import { Link } from "wouter";
 import { useCart } from "@/context/CartContext";
+import { useFavorites } from "@/context/FavoritesContext";
 import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { getProductPrice, getProductImage, getFirstVariantId } from "@/lib/shopify";
 import { products as staticProducts } from "@/data/products";
 
 export default function Shop() {
   const { addItem } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const { products: shopifyProducts, loading, error } = useShopifyProducts();
 
   const usingShopify = !loading && !error && shopifyProducts.length > 0;
@@ -42,8 +44,11 @@ export default function Shop() {
       <Link key={product.id} href={`/product/${product.handle}`} className="bg-white flex flex-col relative group">
         <div className="relative aspect-square bg-secondary">
           <img src={getProductImage(product)} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
-          <button className="absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full text-muted-foreground hover:text-primary z-10" onClick={(e) => { e.preventDefault(); }}>
-            <Heart className="w-4 h-4" strokeWidth={1.5} />
+          <button
+            className={`absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full z-10 ${isFavorite(product.handle) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+            onClick={(e) => { e.preventDefault(); toggleFavorite({ productId: product.handle, variantId: getFirstVariantId(product) ?? "", name: product.title, style: product.tags?.[0] ?? "", price: getProductPrice(product), image: getProductImage(product) }); }}
+          >
+            <Heart className="w-4 h-4" strokeWidth={1.5} fill={isFavorite(product.handle) ? "currentColor" : "none"} />
           </button>
           {product.tags?.includes("new") && (
             <div className="absolute bottom-3 left-3 bg-primary text-white text-[9px] font-medium px-2 py-1 tracking-widest uppercase">NEW</div>
@@ -71,8 +76,11 @@ export default function Shop() {
       <Link key={product.id} href={`/product/${product.id}`} className="bg-white flex flex-col relative group">
         <div className="relative aspect-square bg-secondary">
           <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply" />
-          <button className="absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full text-muted-foreground hover:text-primary z-10" onClick={(e) => { e.preventDefault(); }}>
-            <Heart className="w-4 h-4" strokeWidth={1.5} />
+          <button
+            className={`absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full z-10 ${isFavorite(product.id) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+            onClick={(e) => { e.preventDefault(); toggleFavorite({ productId: product.id, variantId: "", name: product.name, style: product.style, price: product.price, image: product.image }); }}
+          >
+            <Heart className="w-4 h-4" strokeWidth={1.5} fill={isFavorite(product.id) ? "currentColor" : "none"} />
           </button>
           {product.badge && (
             <div className="absolute bottom-3 left-3 bg-primary text-white text-[9px] font-medium px-2 py-1 tracking-widest uppercase">

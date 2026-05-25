@@ -1,8 +1,10 @@
 import { Home, ShoppingBag, Heart, User } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useFavorites } from "@/context/FavoritesContext";
 
 export default function BottomNav() {
   const [location] = useLocation();
+  const { favoriteCount } = useFavorites();
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border z-40 pb-safe" data-testid="bottom-nav">
@@ -15,10 +17,17 @@ export default function BottomNav() {
           <ShoppingBag className="w-5 h-5" strokeWidth={location === "/shop" || location.startsWith("/product/") ? 2 : 1.5} />
           <span className="text-[10px] font-medium tracking-wide">SHOP</span>
         </Link>
-        <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground" data-testid="nav-favorites">
-          <Heart className="w-5 h-5" strokeWidth={1.5} />
+        <Link href="/favorites" className={`flex flex-col items-center justify-center w-full h-full gap-1 relative ${location === "/favorites" ? "text-primary" : "text-muted-foreground"}`} data-testid="nav-favorites">
+          <div className="relative">
+            <Heart className="w-5 h-5" strokeWidth={location === "/favorites" ? 2 : 1.5} fill={location === "/favorites" ? "currentColor" : "none"} />
+            {favoriteCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-primary text-white text-[9px] font-bold w-[14px] h-[14px] rounded-full flex items-center justify-center">
+                {favoriteCount}
+              </span>
+            )}
+          </div>
           <span className="text-[10px] font-medium tracking-wide">FAVORITES</span>
-        </button>
+        </Link>
         <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground" data-testid="nav-account">
           <User className="w-5 h-5" strokeWidth={1.5} />
           <span className="text-[10px] font-medium tracking-wide">ACCOUNT</span>

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
@@ -12,6 +13,7 @@ import Home from "@/pages/Home";
 import Shop from "@/pages/Shop";
 import ProductDetail from "@/pages/ProductDetail";
 import Cart from "@/pages/Cart";
+import Favorites from "@/pages/Favorites";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +27,7 @@ function Router() {
           <Route path="/shop" component={Shop} />
           <Route path="/product/:id" component={ProductDetail} />
           <Route path="/cart" component={Cart} />
+          <Route path="/favorites" component={Favorites} />
           <Route component={NotFound} />
         </Switch>
       </div>
@@ -37,12 +40,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CartProvider>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
+        <FavoritesProvider>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+          </TooltipProvider>
+        </FavoritesProvider>
       </CartProvider>
     </QueryClientProvider>
   );
