@@ -1,6 +1,7 @@
 {
-  "buildCommand": "pnpm --filter @workspace/beauty-site run build",
-  "outputDirectory": "artifacts/beauty-site/dist",
+  "buildCommand": "BASE_PATH=/ PORT=3000 NODE_ENV=production pnpm --filter @workspace/beauty-site run build",
+  "outputDirectory": "artifacts/beauty-site/dist/public",
   "installCommand": "pnpm install",
-  "framework": "vite"
+  "framework": null,
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
