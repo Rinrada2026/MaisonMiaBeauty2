@@ -1,43 +1,15 @@
-import { Heart, Truck, Plus } from "lucide-react";
+import { Heart, Truck } from "lucide-react";
 import { Link } from "wouter";
-import { useCart } from "@/context/CartContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { getProductPrice, getProductImage, getFirstVariantId } from "@/lib/shopify";
 import { products as staticProducts } from "@/data/products";
 
 export default function Shop() {
-  const { addItem } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
   const { products: shopifyProducts, loading, error } = useShopifyProducts();
 
   const usingShopify = !loading && !error && shopifyProducts.length > 0;
-
-  const handleAddToCart = (e: React.MouseEvent, product: any, isShopify: boolean) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isShopify) {
-      addItem({
-        productId: product.handle,
-        variantId: getFirstVariantId(product) ?? "",
-        name: product.title,
-        style: product.tags?.[0] ?? "",
-        price: getProductPrice(product),
-        quantity: 1,
-        image: getProductImage(product),
-      });
-    } else {
-      addItem({
-        productId: product.id,
-        variantId: "",
-        name: product.name,
-        style: product.style,
-        price: product.price,
-        quantity: 1,
-        image: product.image,
-      });
-    }
-  };
 
   const renderShopifyProducts = () =>
     shopifyProducts.map((product) => (
@@ -61,12 +33,6 @@ export default function Shop() {
           <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.title}</h3>
           <p className="text-xs text-muted-foreground mb-1">{product.tags?.[0] ?? ""}</p>
           <p className="text-sm font-medium mt-auto">${getProductPrice(product).toFixed(2)}</p>
-          <button
-            onClick={(e) => handleAddToCart(e, product, true)}
-            className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
         </div>
       </Link>
     ));
@@ -92,12 +58,6 @@ export default function Shop() {
           <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.name}</h3>
           <p className="text-xs text-muted-foreground mb-1">{product.style}</p>
           <p className="text-sm font-medium mt-auto">${product.price.toFixed(2)}</p>
-          <button
-            onClick={(e) => handleAddToCart(e, product, false)}
-            className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
         </div>
       </Link>
     ));

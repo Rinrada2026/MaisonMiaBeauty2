@@ -1,30 +1,14 @@
-import { Feather, Heart, Rabbit, Truck, Plus } from "lucide-react";
+import { Feather, Heart, Rabbit, Truck } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/context/CartContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { getProductPrice, getProductImage, getFirstVariantId } from "@/lib/shopify";
 
 export default function Home() {
   const [, setLocation] = useLocation();
-  const { addItem } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
   const { products: shopifyProducts, loading } = useShopifyProducts();
-
-  const handleAddToCart = (e: React.MouseEvent, product: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem({
-      productId: product.handle,
-      variantId: getFirstVariantId(product) ?? "",
-      name: product.title,
-      style: product.tags?.[0] ?? "",
-      price: getProductPrice(product),
-      quantity: 1,
-      image: getProductImage(product),
-    });
-  };
 
   const bestSellers = shopifyProducts.slice(0, 4);
 
@@ -110,12 +94,6 @@ export default function Home() {
                     <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.title}</h3>
                     <p className="text-xs text-muted-foreground mb-1">{product.tags?.[0] ?? ""}</p>
                     <p className="text-sm font-medium">${getProductPrice(product).toFixed(2)}</p>
-                    <button
-                      onClick={(e) => handleAddToCart(e, product)}
-                      className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
                   </div>
                 </Link>
               ))}
