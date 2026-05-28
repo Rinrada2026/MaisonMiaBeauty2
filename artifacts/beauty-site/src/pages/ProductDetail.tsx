@@ -238,33 +238,6 @@ export default function ProductDetail() {
             </Button>
           </div>
 
-          <div className="mt-6 text-sm text-muted-foreground leading-relaxed space-y-3">
-            <p>Premium lash clusters designed for effortless salon-quality lashes at home ✨</p>
-            <ul className="space-y-1">
-              <li>• Lightweight and comfortable</li>
-              <li>• Soft wispy finish</li>
-              <li>• Reusable with proper care</li>
-              <li>• Beginner-friendly application</li>
-              <li>• Cruelty free</li>
-            </ul>
-            <div>
-              <p className="font-medium text-foreground uppercase tracking-wider text-xs mb-1">Package includes:</p>
-              <ul className="space-y-1">
-                <li>• Lash clusters</li>
-                <li>• Luxury Maison Mia packaging</li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-medium text-foreground uppercase tracking-wider text-xs mb-1">Full Kit option includes:</p>
-              <ul className="space-y-1">
-                <li>• Bond</li>
-                <li>• Seal</li>
-                <li>• Lash applicator</li>
-                <li>• Lash remover</li>
-              </ul>
-            </div>
-          </div>
-
           <div className="border-t border-border mt-6">
             <button
               className="w-full py-4 flex justify-between items-center text-xs font-medium tracking-widest uppercase border-b border-border"
@@ -273,8 +246,31 @@ export default function ProductDetail() {
               PRODUCT DETAILS <span>{activeTab === "details" ? "−" : "+"}</span>
             </button>
             {activeTab === "details" && (
-              <div className="py-4 text-sm text-muted-foreground border-b border-border">
-                Full details about materials, care instructions, and longevity would appear here.
+              <div className="py-4 text-sm text-muted-foreground border-b border-border space-y-3 leading-relaxed">
+                <p>Premium lash clusters designed for effortless salon-quality lashes at home ✨</p>
+                <ul className="space-y-1">
+                  <li>• Lightweight and comfortable</li>
+                  <li>• Soft wispy finish</li>
+                  <li>• Reusable with proper care</li>
+                  <li>• Beginner-friendly application</li>
+                  <li>• Cruelty free</li>
+                </ul>
+                <div>
+                  <p className="font-medium text-foreground uppercase tracking-wider text-xs mb-1">Package includes:</p>
+                  <ul className="space-y-1">
+                    <li>• Lash clusters</li>
+                    <li>• Luxury Maison Mia packaging</li>
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-medium text-foreground uppercase tracking-wider text-xs mb-1">Full Kit option includes:</p>
+                  <ul className="space-y-1">
+                    <li>• Bond</li>
+                    <li>• Seal</li>
+                    <li>• Lash applicator</li>
+                    <li>• Lash remover</li>
+                  </ul>
+                </div>
               </div>
             )}
 
