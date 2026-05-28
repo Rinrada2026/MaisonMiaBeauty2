@@ -140,12 +140,6 @@ export default function ProductDetail() {
           <h1 className="font-serif text-4xl uppercase mb-2">{name}</h1>
           <p className="text-lg font-medium mb-3">${price.toFixed(2)} AUD</p>
 
-          <div className="flex items-center gap-1 mb-6 text-[11px] text-muted-foreground">
-            <div className="flex text-yellow-500">
-              {"★★★★★".split("").map((s, i) => <span key={i}>{s}</span>)}
-            </div>
-            <span className="ml-1">(128 reviews)</span>
-          </div>
 
           <div className="text-sm leading-relaxed mb-8">
             <p className="font-bold uppercase tracking-wider text-xs mb-1">{style}</p>
