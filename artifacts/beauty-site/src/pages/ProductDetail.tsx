@@ -373,7 +373,7 @@ export default function ProductDetail() {
         </div>
         <div className="flex flex-col items-center text-center p-6 gap-3">
           <ShieldCheck className="w-6 h-6 text-foreground" strokeWidth={1} />
-          <span className="text-[9px] font-medium tracking-widest uppercase">EASY RETURNS 30-DAY</span>
+          <span className="text-[9px] font-medium tracking-widest uppercase">FAST AUSTRALIA SHIPPING</span>
         </div>
       </section>
     </main>
