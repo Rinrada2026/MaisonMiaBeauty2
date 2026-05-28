@@ -247,7 +247,7 @@ export default function ProductDetail() {
             </button>
             {activeTab === "details" && (
               <div className="py-4 text-sm text-muted-foreground border-b border-border space-y-3 leading-relaxed">
-                <p>Premium lash clusters designed for effortless salon-quality lashes at home ✨</p>
+                <p className="font-semibold text-foreground">Premium lash clusters designed for effortless salon-quality lashes at home ✨</p>
                 <ul className="space-y-1">
                   <li>• Lightweight and comfortable</li>
                   <li>• Soft wispy finish</li>
