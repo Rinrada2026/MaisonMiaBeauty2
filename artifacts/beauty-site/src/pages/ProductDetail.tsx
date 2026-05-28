@@ -281,8 +281,15 @@ export default function ProductDetail() {
               SHIPPING & RETURNS <span>{activeTab === "shipping" ? "−" : "+"}</span>
             </button>
             {activeTab === "shipping" && (
-              <div className="py-4 text-sm text-muted-foreground border-b border-border">
-                Information about shipping times, international delivery, and our 7-day return policy.
+              <div className="py-4 text-sm text-muted-foreground border-b border-border space-y-3 leading-relaxed">
+                <p className="font-semibold text-foreground">Australia-wide shipping available 🇦🇺</p>
+                <ul className="space-y-1">
+                  <li>• Free shipping on orders over $80 AUD</li>
+                  <li>• Orders are processed within 1–3 business days</li>
+                  <li>• Tracking provided for all orders</li>
+                </ul>
+                <p>Due to hygiene reasons, opened lash products cannot be returned.</p>
+                <p>If your order arrives damaged or incorrect, please contact us within 7 days of delivery.</p>
               </div>
             )}
           </div>
