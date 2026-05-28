@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Truck, X, ShieldCheck, RefreshCw, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, total, itemCount, checkout, isCheckingOut } = useCart();
