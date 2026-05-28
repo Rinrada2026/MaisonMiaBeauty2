@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "wouter";
 import { Heart, Truck, Feather, Rabbit, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useToast } from "@/hooks/use-toast";
 import { useShopifyProduct } from "@/hooks/useShopifyProducts";
-import { getProductPrice, getProductImage, getFirstVariantId } from "@/lib/shopify";
+import { getProductPrice, getProductImage, ShopifyVariant } from "@/lib/shopify";
 import { products as staticProducts } from "@/data/products";
 
 export default function ProductDetail() {
@@ -16,19 +16,35 @@ export default function ProductDetail() {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"details" | "shipping" | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
 
   const { product: shopifyProduct, loading } = useShopifyProduct(id);
-
   const staticProduct = staticProducts.find((p) => p.id === id);
 
+  useEffect(() => {
+    if (shopifyProduct?.options) {
+      const initial: Record<string, string> = {};
+      shopifyProduct.options.forEach((opt) => {
+        if (opt.values.length > 0) initial[opt.name] = opt.values[0];
+      });
+      setSelectedOptions(initial);
+    }
+  }, [shopifyProduct]);
+
+  const selectedVariant: ShopifyVariant | null = shopifyProduct
+    ? (shopifyProduct.variants.edges.find(({ node }) =>
+        node.selectedOptions.every((so) => selectedOptions[so.name] === so.value)
+      )?.node ?? shopifyProduct.variants.edges[0]?.node ?? null)
+    : null;
+
   const handleAddToCart = () => {
-    if (shopifyProduct) {
+    if (shopifyProduct && selectedVariant) {
       addItem({
         productId: shopifyProduct.handle,
-        variantId: getFirstVariantId(shopifyProduct) ?? "",
+        variantId: selectedVariant.id,
         name: shopifyProduct.title,
-        style: shopifyProduct.tags?.[0] ?? "",
-        price: getProductPrice(shopifyProduct),
+        style: Object.values(selectedOptions).join(" / "),
+        price: parseFloat(selectedVariant.price.amount),
         quantity,
         image: getProductImage(shopifyProduct),
       });
@@ -120,6 +136,36 @@ export default function ProductDetail() {
             <p className="font-bold uppercase tracking-wider text-xs mb-1">{style}</p>
             <p className="text-muted-foreground">{description}</p>
           </div>
+
+          {shopifyProduct && shopifyProduct.options.filter((o) => !(o.values.length === 1 && o.name === "Title")).length > 0 && (
+            <div className="mb-6 flex flex-col gap-4">
+              {shopifyProduct.options.filter((o) => !(o.values.length === 1 && o.name === "Title")).map((option) => (
+                <div key={option.name}>
+                  <p className="text-[10px] font-medium uppercase tracking-widest mb-2">
+                    {option.name}: <span className="text-foreground">{selectedOptions[option.name]}</span>
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {option.values.map((value) => {
+                      const isSelected = selectedOptions[option.name] === value;
+                      return (
+                        <button
+                          key={value}
+                          onClick={() => setSelectedOptions((prev) => ({ ...prev, [option.name]: value }))}
+                          className={`px-4 py-2 text-xs border transition-colors ${
+                            isSelected
+                              ? "border-primary bg-primary text-white"
+                              : "border-border bg-white text-foreground hover:border-primary"
+                          }`}
+                        >
+                          {value}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {staticProduct && (
             <div className="border border-border rounded-sm mb-6 text-xs flex flex-col bg-white">

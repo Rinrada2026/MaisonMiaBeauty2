@@ -24,6 +24,19 @@ async function shopifyFetch<T>(query: string, variables?: Record<string, unknown
   return json.data as T;
 }
 
+export interface ShopifyProductOption {
+  name: string;
+  values: string[];
+}
+
+export interface ShopifyVariant {
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  price: { amount: string };
+  selectedOptions: { name: string; value: string }[];
+}
+
 export interface ShopifyProduct {
   id: string;
   handle: string;
@@ -31,7 +44,8 @@ export interface ShopifyProduct {
   description: string;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
   images: { edges: { node: { url: string; altText: string | null } }[] };
-  variants: { edges: { node: { id: string; title: string; availableForSale: boolean; price: { amount: string } } }[] };
+  options: ShopifyProductOption[];
+  variants: { edges: { node: ShopifyVariant }[] };
   tags: string[];
   metafields?: { key: string; value: string }[];
 }
@@ -74,7 +88,11 @@ const PRODUCT_FRAGMENT = `
         }
       }
     }
-    variants(first: 10) {
+    options {
+      name
+      values
+    }
+    variants(first: 20) {
       edges {
         node {
           id
@@ -82,6 +100,10 @@ const PRODUCT_FRAGMENT = `
           availableForSale
           price {
             amount
+          }
+          selectedOptions {
+            name
+            value
           }
         }
       }
