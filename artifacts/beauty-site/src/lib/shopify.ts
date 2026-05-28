@@ -148,6 +148,24 @@ export async function getProduct(handle: string): Promise<ShopifyProduct | null>
   return data.product ?? null;
 }
 
+export async function searchProducts(query: string): Promise<ShopifyProduct[]> {
+  const gqlQuery = `
+    ${PRODUCT_FRAGMENT}
+    query SearchProducts($query: String!) {
+      products(first: 10, query: $query) {
+        edges {
+          node {
+            ...ProductFields
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyFetch<ProductsData>(gqlQuery, { query });
+  return data.products.edges.map((e) => e.node);
+}
+
 export async function createCheckout(
   lines: { merchandiseId: string; quantity: number }[]
 ): Promise<string> {
