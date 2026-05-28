@@ -16,26 +16,21 @@ export default function ProductDetail() {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"details" | "shipping" | null>(null);
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
   const { product: shopifyProduct, loading } = useShopifyProduct(id);
   const staticProduct = staticProducts.find((p) => p.id === id);
 
   useEffect(() => {
-    if (shopifyProduct?.options) {
-      const initial: Record<string, string> = {};
-      shopifyProduct.options.forEach((opt) => {
-        if (opt.values.length > 0) initial[opt.name] = opt.values[0];
-      });
-      setSelectedOptions(initial);
+    if (shopifyProduct?.variants.edges.length) {
+      setSelectedVariantId(shopifyProduct.variants.edges[0].node.id);
     }
   }, [shopifyProduct]);
 
   const selectedVariant: ShopifyVariant | null = shopifyProduct
-    ? (shopifyProduct.variants.edges.find(({ node }) =>
-        node.selectedOptions.every((so) => selectedOptions[so.name] === so.value)
-      )?.node ?? shopifyProduct.variants.edges[0]?.node ?? null)
+    ? (shopifyProduct.variants.edges.find(({ node }) => node.id === selectedVariantId)?.node ??
+       shopifyProduct.variants.edges[0]?.node ?? null)
     : null;
 
   const handleAddToCart = () => {
@@ -44,10 +39,10 @@ export default function ProductDetail() {
         productId: shopifyProduct.handle,
         variantId: selectedVariant.id,
         name: shopifyProduct.title,
-        style: Object.values(selectedOptions).join(" / "),
+        style: selectedVariant.selectedOptions.map((o) => o.name).join(" / "),
         price: parseFloat(selectedVariant.price.amount),
         quantity,
-        image: getProductImage(shopifyProduct),
+        image: selectedVariant.image?.url ?? getProductImage(shopifyProduct),
       });
       toast({ title: "Added to cart", description: `${quantity}x ${shopifyProduct.title} added to your cart.` });
     } else if (staticProduct) {
@@ -149,33 +144,38 @@ export default function ProductDetail() {
             <p className="text-muted-foreground">{description}</p>
           </div>
 
-          {shopifyProduct && shopifyProduct.options.filter((o) => !(o.values.length === 1 && o.name === "Title")).length > 0 && (
-            <div className="mb-6 flex flex-col gap-4">
-              {shopifyProduct.options.filter((o) => !(o.values.length === 1 && o.name === "Title")).map((option) => (
-                <div key={option.name}>
-                  <p className="text-[10px] font-medium uppercase tracking-widest mb-2">
-                    {option.name}: <span className="text-foreground">{selectedOptions[option.name]}</span>
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {option.values.map((value) => {
-                      const isSelected = selectedOptions[option.name] === value;
-                      return (
-                        <button
-                          key={value}
-                          onClick={() => { setSelectedOptions((prev) => ({ ...prev, [option.name]: value })); setActiveImage(null); }}
-                          className={`px-4 py-2 text-xs border transition-colors ${
-                            isSelected
-                              ? "border-primary bg-primary text-white"
-                              : "border-border bg-white text-foreground hover:border-primary"
-                          }`}
-                        >
-                          {value}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+          {shopifyProduct && shopifyProduct.variants.edges.length > 0 && (
+            <div className="mb-6">
+              <p className="text-[10px] font-semibold uppercase tracking-widest mb-3 text-foreground">CHOOSE YOUR OPTION</p>
+              <div className="flex flex-col gap-3">
+                {shopifyProduct.variants.edges.map(({ node: variant }) => {
+                  const isSelected = selectedVariantId === variant.id;
+                  const variantName = variant.selectedOptions.map((o) => o.name).join(" + ");
+                  const variantImg = variant.image?.url ?? getProductImage(shopifyProduct);
+                  return (
+                    <button
+                      key={variant.id}
+                      onClick={() => { setSelectedVariantId(variant.id); setActiveImage(null); }}
+                      className={`flex items-center gap-4 p-4 rounded-lg border-2 text-left transition-all ${
+                        isSelected ? "border-primary bg-white" : "border-border bg-white hover:border-primary/40"
+                      }`}
+                    >
+                      <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                        isSelected ? "border-primary" : "border-muted-foreground/40"
+                      }`}>
+                        {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold uppercase tracking-wider text-foreground">{variantName}</p>
+                        <p className="text-sm font-semibold text-foreground mt-0.5">${parseFloat(variant.price.amount).toFixed(2)} AUD</p>
+                      </div>
+                      <div className="shrink-0 w-20 h-20 bg-secondary rounded-md overflow-hidden">
+                        <img src={variantImg} alt={variantName} className="w-full h-full object-cover mix-blend-multiply" />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
@@ -196,34 +196,40 @@ export default function ProductDetail() {
             </div>
           )}
 
-          <div className="flex items-center gap-3 mb-6 bg-secondary/50 p-3 text-xs">
+          <div className="flex items-center gap-3 mb-6 bg-secondary/50 p-3 text-xs rounded-md">
             <Truck className="w-4 h-4 text-primary shrink-0" strokeWidth={1.5} />
             <span>Free shipping on orders over $80 Australia-wide</span>
           </div>
 
           <div className="flex flex-col gap-3 mb-8">
-            <div className="flex items-center border border-border bg-white h-12 w-full max-w-[120px]">
-              <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary" onClick={() => setQuantity((q) => Math.max(1, q - 1))}>&minus;</button>
-              <span className="flex-1 text-center text-sm font-medium">{quantity}</span>
-              <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary" onClick={() => setQuantity((q) => q + 1)}>+</button>
+            <div className="flex items-center justify-between mb-1">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-widest mb-2 text-foreground">QUANTITY</p>
+                <div className="flex items-center border border-border bg-white h-11 w-[120px]">
+                  <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary transition-colors" onClick={() => setQuantity((q) => Math.max(1, q - 1))}>&minus;</button>
+                  <span className="flex-1 text-center text-sm font-medium">{quantity}</span>
+                  <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary transition-colors" onClick={() => setQuantity((q) => q + 1)}>+</button>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  const productId = shopifyProduct?.handle ?? staticProduct?.id ?? "";
+                  const favVariantId = selectedVariant?.id ?? "";
+                  toggleFavorite({ productId, variantId: favVariantId, name, style, price, image: mainImage });
+                }}
+                className={`flex items-center gap-2 text-xs font-medium uppercase tracking-widest transition-colors mt-5 ${isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+              >
+                <Heart className="w-4 h-4" strokeWidth={1.5} fill={isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "currentColor" : "none"} />
+                ADD TO WISHLIST
+              </button>
             </div>
-            <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-xs uppercase" onClick={handleAddToCart}>
+
+            <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-xs uppercase mt-2" onClick={handleAddToCart}>
               ADD TO CART
             </Button>
             <Button className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-none flex items-center justify-center gap-2">
               Buy with <span className="font-bold tracking-tight text-sm">Apple Pay</span>
             </Button>
-
-            <button
-              onClick={() => {
-                const productId = shopifyProduct?.handle ?? staticProduct?.id ?? "";
-                toggleFavorite({ productId, variantId: shopifyProduct ? (getFirstVariantId(shopifyProduct) ?? "") : "", name, style, price, image });
-              }}
-              className={`flex items-center justify-center gap-2 mt-4 text-xs font-medium uppercase tracking-widest transition-colors ${isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "text-primary" : "hover:text-primary"}`}
-            >
-              <Heart className="w-4 h-4" strokeWidth={1.5} fill={isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "currentColor" : "none"} />
-              {isFavorite(shopifyProduct?.handle ?? staticProduct?.id ?? "") ? "Saved to Wishlist" : "Add to Wishlist"}
-            </button>
           </div>
 
           <div className="border-t border-border mt-auto">
