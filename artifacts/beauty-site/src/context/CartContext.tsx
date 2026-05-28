@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from "react";
 import { createCheckout } from "@/lib/shopify";
 
 export type CartItem = {
@@ -34,9 +34,35 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   });
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [pendingCheckoutUrl, setPendingCheckoutUrl] = useState<string | null>(
+    () => localStorage.getItem("maison-mia-checkout-url")
+  );
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     localStorage.setItem("maison-mia-cart", JSON.stringify(items));
+
+    if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+
+    const lines = items
+      .filter((item) => item.variantId)
+      .map((item) => ({ merchandiseId: item.variantId, quantity: item.quantity }));
+
+    if (lines.length === 0) {
+      setPendingCheckoutUrl(null);
+      localStorage.removeItem("maison-mia-checkout-url");
+      return;
+    }
+
+    syncTimerRef.current = setTimeout(async () => {
+      try {
+        const url = await createCheckout(lines);
+        setPendingCheckoutUrl(url);
+        localStorage.setItem("maison-mia-checkout-url", url);
+      } catch {
+        // silent — user can still checkout manually
+      }
+    }, 1500);
   }, [items]);
 
   const addItem = (newItem: CartItem) => {
@@ -72,12 +98,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (items.length === 0) return;
     setIsCheckingOut(true);
     try {
+      if (pendingCheckoutUrl) {
+        window.location.href = pendingCheckoutUrl;
+        return;
+      }
+
       const lines = items
         .filter((item) => item.variantId)
-        .map((item) => ({
-          merchandiseId: item.variantId,
-          quantity: item.quantity,
-        }));
+        .map((item) => ({ merchandiseId: item.variantId, quantity: item.quantity }));
 
       if (lines.length === 0) {
         window.location.href = `https://${import.meta.env.VITE_SHOPIFY_STORE_DOMAIN}/cart`;
