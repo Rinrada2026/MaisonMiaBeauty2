@@ -4,13 +4,24 @@ import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 
 export default function Favorites() {
   const { favorites, removeFavorite } = useFavorites();
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { products: shopifyProducts } = useShopifyProducts();
+
+  const isSoldOut = (productId: string): boolean => {
+    const product = shopifyProducts.find(
+      (p) => p.handle === productId || p.id === productId
+    );
+    if (!product) return false;
+    return product.variants.edges.every(({ node }) => !node.availableForSale);
+  };
 
   const handleAddToCart = (item: typeof favorites[0]) => {
+    if (isSoldOut(item.productId)) return;
     addItem({
       productId: item.productId,
       variantId: item.variantId,
@@ -49,34 +60,43 @@ export default function Favorites() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-border max-w-6xl mx-auto">
-        {favorites.map((item) => (
-          <div key={item.productId} className="bg-white flex flex-col relative group">
-            <Link href={`/product/${item.productId}`} className="block">
-              <div className="relative aspect-square bg-secondary">
-                <img src={item.image} alt={item.name} className="w-full h-full object-cover mix-blend-multiply" />
-                <button
-                  onClick={(e) => { e.preventDefault(); removeFavorite(item.productId); }}
-                  className="absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full text-primary z-10"
-                >
-                  <Heart className="w-4 h-4 fill-primary" strokeWidth={1.5} />
-                </button>
-              </div>
-            </Link>
-            <div className="p-4 flex flex-col flex-grow gap-2">
-              <Link href={`/product/${item.productId}`}>
-                <h3 className="text-xs font-medium tracking-[0.15em] uppercase">{item.name}</h3>
-                <p className="text-xs text-muted-foreground">{item.style}</p>
-                <p className="text-sm font-medium mt-1">${item.price.toFixed(2)}</p>
+        {favorites.map((item) => {
+          const soldOut = isSoldOut(item.productId);
+          return (
+            <div key={item.productId} className="bg-white flex flex-col relative group">
+              <Link href={`/product/${item.productId}`} className="block">
+                <div className="relative aspect-square bg-secondary">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover mix-blend-multiply" />
+                  <button
+                    onClick={(e) => { e.preventDefault(); removeFavorite(item.productId); }}
+                    className="absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full text-primary z-10"
+                  >
+                    <Heart className="w-4 h-4 fill-primary" strokeWidth={1.5} />
+                  </button>
+                </div>
               </Link>
-              <Button
-                className="w-full h-9 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-[10px] uppercase mt-auto"
-                onClick={() => handleAddToCart(item)}
-              >
-                ADD TO CART
-              </Button>
+              <div className="p-4 flex flex-col flex-grow gap-2">
+                <Link href={`/product/${item.productId}`}>
+                  <h3 className="text-xs font-medium tracking-[0.15em] uppercase">{item.name}</h3>
+                  <p className="text-xs text-muted-foreground">{item.style}</p>
+                  <p className="text-sm font-medium mt-1">${item.price.toFixed(2)}</p>
+                </Link>
+                {soldOut ? (
+                  <div className="w-full h-9 border border-muted-foreground/30 flex items-center justify-center mt-auto">
+                    <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Sold Out</span>
+                  </div>
+                ) : (
+                  <Button
+                    className="w-full h-9 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-[10px] uppercase mt-auto"
+                    onClick={() => handleAddToCart(item)}
+                  >
+                    ADD TO CART
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </main>
   );
