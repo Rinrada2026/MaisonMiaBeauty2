@@ -158,21 +158,30 @@ export default function ProductDetail() {
                   const isSelected = selectedVariantId === variant.id;
                   const variantName = getVariantDisplayName(variant);
                   const variantImg = variant.image?.url ?? getProductImage(shopifyProduct);
+                  const soldOut = !variant.availableForSale;
                   return (
                     <button
                       key={variant.id}
-                      onClick={() => { setSelectedVariantId(variant.id); setActiveImage(null); }}
+                      onClick={() => { if (!soldOut) { setSelectedVariantId(variant.id); setActiveImage(null); } }}
+                      disabled={soldOut}
                       className={`flex items-center gap-4 p-4 rounded-lg border-2 text-left transition-all ${
-                        isSelected ? "border-primary bg-white" : "border-border bg-white hover:border-primary/40"
+                        soldOut
+                          ? "border-border bg-secondary/30 opacity-60 cursor-not-allowed"
+                          : isSelected
+                            ? "border-primary bg-white"
+                            : "border-border bg-white hover:border-primary/40"
                       }`}
                     >
                       <div className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                        isSelected ? "border-primary" : "border-muted-foreground/40"
+                        soldOut ? "border-muted-foreground/20" : isSelected ? "border-primary" : "border-muted-foreground/40"
                       }`}>
-                        {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                        {isSelected && !soldOut && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold uppercase tracking-wider text-foreground">{variantName}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-bold uppercase tracking-wider text-foreground">{variantName}</p>
+                          {soldOut && <span className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground border border-muted-foreground/30 px-1.5 py-0.5 rounded">Sold Out</span>}
+                        </div>
                         <p className="text-sm font-semibold text-foreground mt-0.5">${parseFloat(variant.price.amount).toFixed(2)} AUD</p>
                       </div>
                       <div className="shrink-0 w-20 h-20 bg-secondary rounded-md overflow-hidden">
@@ -230,8 +239,12 @@ export default function ProductDetail() {
               </button>
             </div>
 
-            <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-xs uppercase mt-2" onClick={handleAddToCart}>
-              ADD TO CART
+            <Button
+              className="w-full h-12 rounded-none tracking-widest text-xs uppercase mt-2 disabled:opacity-60 disabled:cursor-not-allowed bg-primary hover:bg-primary/90 text-white"
+              onClick={handleAddToCart}
+              disabled={selectedVariant ? !selectedVariant.availableForSale : false}
+            >
+              {selectedVariant && !selectedVariant.availableForSale ? "SOLD OUT" : "ADD TO CART"}
             </Button>
             <Button className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-none flex items-center justify-center gap-2">
               Buy with <span className="font-bold tracking-tight text-sm">Apple Pay</span>
