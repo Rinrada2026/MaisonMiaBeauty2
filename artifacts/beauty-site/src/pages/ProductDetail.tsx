@@ -28,6 +28,14 @@ export default function ProductDetail() {
     }
   }, [shopifyProduct]);
 
+  const getVariantDisplayName = (variant: ShopifyVariant): string => {
+    const title = variant.title;
+    if (!title || title === "Default Title" || /^\d+(\.\d+)?$/.test(title.trim())) {
+      return variant.selectedOptions.map((o) => o.name).join(" / ");
+    }
+    return title;
+  };
+
   const selectedVariant: ShopifyVariant | null = shopifyProduct
     ? (shopifyProduct.variants.edges.find(({ node }) => node.id === selectedVariantId)?.node ??
        shopifyProduct.variants.edges[0]?.node ?? null)
@@ -39,7 +47,7 @@ export default function ProductDetail() {
         productId: shopifyProduct.handle,
         variantId: selectedVariant.id,
         name: shopifyProduct.title,
-        style: selectedVariant.title,
+        style: getVariantDisplayName(selectedVariant),
         price: parseFloat(selectedVariant.price.amount),
         quantity,
         image: selectedVariant.image?.url ?? getProductImage(shopifyProduct),
@@ -150,7 +158,7 @@ export default function ProductDetail() {
               <div className="flex flex-col gap-3">
                 {shopifyProduct.variants.edges.map(({ node: variant }) => {
                   const isSelected = selectedVariantId === variant.id;
-                  const variantName = variant.title;
+                  const variantName = getVariantDisplayName(variant);
                   const variantImg = variant.image?.url ?? getProductImage(shopifyProduct);
                   return (
                     <button
