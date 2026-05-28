@@ -33,7 +33,6 @@ export interface ShopifyVariant {
   id: string;
   title: string;
   availableForSale: boolean;
-  quantityAvailable: number | null;
   price: { amount: string };
   selectedOptions: { name: string; value: string }[];
   image?: { url: string; altText: string | null } | null;
@@ -102,7 +101,6 @@ const PRODUCT_FRAGMENT = `
           id
           title
           availableForSale
-          quantityAvailable
           price {
             amount
           }
