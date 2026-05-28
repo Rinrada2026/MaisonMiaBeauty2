@@ -35,6 +35,7 @@ export interface ShopifyVariant {
   availableForSale: boolean;
   price: { amount: string };
   selectedOptions: { name: string; value: string }[];
+  image?: { url: string; altText: string | null } | null;
 }
 
 export interface ShopifyProduct {
@@ -104,6 +105,10 @@ const PRODUCT_FRAGMENT = `
           selectedOptions {
             name
             value
+          }
+          image {
+            url
+            altText
           }
         }
       }

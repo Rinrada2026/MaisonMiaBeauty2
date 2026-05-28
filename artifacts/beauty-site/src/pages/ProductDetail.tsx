@@ -17,6 +17,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"details" | "shipping" | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
+  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   const { product: shopifyProduct, loading } = useShopifyProduct(id);
   const staticProduct = staticProducts.find((p) => p.id === id);
@@ -83,13 +84,20 @@ export default function ProductDetail() {
   }
 
   const name = shopifyProduct?.title ?? staticProduct?.name ?? "";
-  const price = shopifyProduct ? getProductPrice(shopifyProduct) : (staticProduct?.price ?? 0);
-  const image = shopifyProduct ? getProductImage(shopifyProduct) : (staticProduct?.image ?? "");
+  const price = selectedVariant
+    ? parseFloat(selectedVariant.price.amount)
+    : shopifyProduct
+    ? getProductPrice(shopifyProduct)
+    : (staticProduct?.price ?? 0);
+  const defaultImage = shopifyProduct ? getProductImage(shopifyProduct) : (staticProduct?.image ?? "");
+  const variantImage = selectedVariant?.image?.url ?? null;
   const description = shopifyProduct?.description ?? staticProduct?.description ?? "";
   const style = shopifyProduct?.tags?.[0] ?? staticProduct?.style ?? "";
   const badge = shopifyProduct?.tags?.includes("best-seller") ? "BEST SELLER" : shopifyProduct?.tags?.includes("new") ? "NEW" : staticProduct?.badge ?? null;
-  const images = shopifyProduct?.images.edges.map((e) => e.node.url) ?? [image, image, image, image];
-  const allImages = images.length >= 4 ? images.slice(0, 4) : [...images, ...Array(4 - images.length).fill(image)];
+  const productImages = shopifyProduct?.images.edges.map((e) => e.node.url) ?? [defaultImage];
+  const allImages = productImages.length >= 4 ? productImages.slice(0, 4) : [...productImages, ...Array(Math.max(0, 4 - productImages.length)).fill(defaultImage)];
+
+  const mainImage = variantImage ?? activeImage ?? defaultImage;
 
   if (!shopifyProduct && !staticProduct) {
     return <div className="p-20 text-center">Product not found</div>;
@@ -103,14 +111,18 @@ export default function ProductDetail() {
 
       <div className="flex flex-col md:flex-row gap-8 lg:gap-16 px-4 max-w-6xl mx-auto">
         <div className="w-full md:w-1/2 flex flex-col gap-2">
-          <div className="aspect-square bg-secondary w-full relative">
-            <img src={image} alt={name} className="w-full h-full object-cover mix-blend-multiply" />
+          <div className="aspect-square bg-secondary w-full relative overflow-hidden">
+            <img src={mainImage} alt={name} className="w-full h-full object-cover mix-blend-multiply transition-opacity duration-300" />
           </div>
           <div className="grid grid-cols-4 gap-2">
             {allImages.map((img, i) => (
-              <div key={i} className={`aspect-square bg-secondary border ${i === 0 ? "border-primary" : "border-transparent"}`}>
+              <button
+                key={i}
+                onClick={() => setActiveImage(img)}
+                className={`aspect-square bg-secondary border transition-colors ${mainImage === img ? "border-primary" : "border-transparent hover:border-primary/50"}`}
+              >
                 <img src={img} alt="" className="w-full h-full object-cover mix-blend-multiply" />
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -150,7 +162,7 @@ export default function ProductDetail() {
                       return (
                         <button
                           key={value}
-                          onClick={() => setSelectedOptions((prev) => ({ ...prev, [option.name]: value }))}
+                          onClick={() => { setSelectedOptions((prev) => ({ ...prev, [option.name]: value })); setActiveImage(null); }}
                           className={`px-4 py-2 text-xs border transition-colors ${
                             isSelected
                               ? "border-primary bg-primary text-white"
