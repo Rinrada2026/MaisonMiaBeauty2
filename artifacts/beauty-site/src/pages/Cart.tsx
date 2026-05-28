@@ -75,7 +75,7 @@ export default function Cart() {
                   <div className="flex items-center border border-border bg-white h-9 w-[100px] mt-auto">
                     <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary" onClick={() => updateQuantity(item.productId, item.quantity - 1)}>&minus;</button>
                     <span className="flex-1 text-center text-xs font-medium">{item.quantity}</span>
-                    <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary disabled:opacity-40 disabled:cursor-not-allowed" onClick={() => updateQuantity(item.productId, item.quantity + 1)} disabled={item.quantityAvailable != null && item.quantity >= item.quantityAvailable}>+</button>
+                    <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary" onClick={() => updateQuantity(item.productId, item.quantity + 1)}>+</button>
                   </div>
                 </div>
 

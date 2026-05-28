@@ -71,7 +71,6 @@ export default function ProductDetail() {
         price: parseFloat(selectedVariant.price.amount),
         quantity,
         image: selectedVariant.image?.url ?? getProductImage(shopifyProduct),
-        quantityAvailable: selectedVariant.quantityAvailable,
       });
       toast({ title: "Added to cart", description: `${quantity}x ${shopifyProduct.title} added to your cart.` });
     } else if (staticProduct) {
@@ -244,7 +243,7 @@ export default function ProductDetail() {
                 <div className="flex items-center border border-border bg-white h-11 w-[120px]">
                   <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary transition-colors" onClick={() => setQuantity((q) => Math.max(1, q - 1))}>&minus;</button>
                   <span className="flex-1 text-center text-sm font-medium">{quantity}</span>
-                  <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary transition-colors" onClick={() => setQuantity((q) => selectedVariant?.quantityAvailable != null ? Math.min(selectedVariant.quantityAvailable, q + 1) : q + 1)}>+</button>
+                  <button className="flex-1 h-full flex items-center justify-center text-lg hover:bg-secondary transition-colors" onClick={() => setQuantity((q) => q + 1)}>+</button>
                 </div>
               </div>
               <button
