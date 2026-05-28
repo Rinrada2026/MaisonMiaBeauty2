@@ -62,6 +62,7 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (shopifyProduct && selectedVariant) {
+      if (!selectedVariant.availableForSale) return;
       addItem({
         productId: shopifyProduct.handle,
         variantId: selectedVariant.id,
