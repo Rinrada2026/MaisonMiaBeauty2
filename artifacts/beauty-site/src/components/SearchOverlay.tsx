@@ -104,7 +104,6 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium uppercase tracking-wider text-foreground truncate">{product.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{product.tags?.[0] ?? ""}</p>
-                    <p className="text-sm font-semibold text-foreground mt-1">${getProductPrice(product).toFixed(2)} AUD</p>
                   </div>
                 </Link>
               ))}
