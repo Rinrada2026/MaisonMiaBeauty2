@@ -95,6 +95,7 @@ export default function ProductDetail() {
   const defaultImage = shopifyProduct ? getProductImage(shopifyProduct) : (staticProduct?.image ?? "");
   const variantImage = selectedVariant?.image?.url ?? null;
   const description = shopifyProduct?.description ?? staticProduct?.description ?? "";
+  const descriptionHtml = shopifyProduct?.descriptionHtml ?? null;
   const style = shopifyProduct?.tags?.[0] ?? staticProduct?.style ?? "";
   const badge = shopifyProduct?.tags?.includes("best-seller") ? "BEST SELLER" : shopifyProduct?.tags?.includes("new") ? "NEW" : staticProduct?.badge ?? null;
   const productImages = shopifyProduct?.images.edges.map((e) => e.node.url) ?? [defaultImage];
@@ -143,7 +144,10 @@ export default function ProductDetail() {
 
           <div className="text-sm leading-relaxed mb-8">
             <p className="font-bold uppercase tracking-wider text-xs mb-1">{style}</p>
-            <p className="text-muted-foreground">{description}</p>
+            {descriptionHtml
+              ? <div className="text-muted-foreground prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: descriptionHtml }} />
+              : <p className="text-muted-foreground">{description}</p>
+            }
           </div>
 
           {shopifyProduct && shopifyProduct.variants.edges.length > 0 && (

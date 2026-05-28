@@ -43,6 +43,7 @@ export interface ShopifyProduct {
   handle: string;
   title: string;
   description: string;
+  descriptionHtml: string;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
   images: { edges: { node: { url: string; altText: string | null } }[] };
   options: ShopifyProductOption[];
@@ -74,6 +75,7 @@ const PRODUCT_FRAGMENT = `
     handle
     title
     description
+    descriptionHtml
     tags
     priceRange {
       minVariantPrice {
