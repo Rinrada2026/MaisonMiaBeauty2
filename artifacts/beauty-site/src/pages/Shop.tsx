@@ -12,30 +12,38 @@ export default function Shop() {
   const usingShopify = !loading && !error && shopifyProducts.length > 0;
 
   const renderShopifyProducts = () =>
-    shopifyProducts.map((product) => (
-      <Link key={product.id} href={`/product/${product.handle}`} className="bg-white flex flex-col relative group">
-        <div className="relative aspect-square bg-secondary">
-          <img src={getProductImage(product)} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
-          <button
-            className={`absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full z-10 ${isFavorite(product.handle) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
-            onClick={(e) => { e.preventDefault(); toggleFavorite({ productId: product.handle, variantId: getFirstVariantId(product) ?? "", name: product.title, style: product.tags?.[0] ?? "", price: getProductPrice(product), image: getProductImage(product) }); }}
-          >
-            <Heart className="w-4 h-4" strokeWidth={1.5} fill={isFavorite(product.handle) ? "currentColor" : "none"} />
-          </button>
-          {product.tags?.includes("new") && (
-            <div className="absolute bottom-3 left-3 bg-primary text-white text-[9px] font-medium px-2 py-1 tracking-widest uppercase">NEW</div>
-          )}
-          {product.tags?.includes("best-seller") && (
-            <div className="absolute bottom-3 left-3 bg-primary text-white text-[9px] font-medium px-2 py-1 tracking-widest uppercase">BEST SELLER</div>
-          )}
-        </div>
-        <div className="p-4 flex flex-col relative flex-grow">
-          <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.title}</h3>
-          <p className="text-xs text-muted-foreground mb-1">{product.tags?.[0] ?? ""}</p>
-          <p className="text-sm font-medium mt-auto">${getProductPrice(product).toFixed(2)}</p>
-        </div>
-      </Link>
-    ));
+    shopifyProducts.map((product) => {
+      const allSoldOut = product.variants.edges.every(({ node }) => !node.availableForSale);
+      return (
+        <Link key={product.id} href={`/product/${product.handle}`} className="bg-white flex flex-col relative group">
+          <div className="relative aspect-square bg-secondary">
+            <img src={getProductImage(product)} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
+            <button
+              className={`absolute top-3 right-3 p-1.5 bg-white/80 backdrop-blur rounded-full z-10 ${isFavorite(product.handle) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+              onClick={(e) => { e.preventDefault(); toggleFavorite({ productId: product.handle, variantId: getFirstVariantId(product) ?? "", name: product.title, style: product.tags?.[0] ?? "", price: getProductPrice(product), image: getProductImage(product) }); }}
+            >
+              <Heart className="w-4 h-4" strokeWidth={1.5} fill={isFavorite(product.handle) ? "currentColor" : "none"} />
+            </button>
+            {product.tags?.includes("new") && (
+              <div className="absolute bottom-3 left-3 bg-primary text-white text-[9px] font-medium px-2 py-1 tracking-widest uppercase">NEW</div>
+            )}
+            {product.tags?.includes("best-seller") && (
+              <div className="absolute bottom-3 left-3 bg-primary text-white text-[9px] font-medium px-2 py-1 tracking-widest uppercase">BEST SELLER</div>
+            )}
+          </div>
+          <div className="p-4 flex flex-col relative flex-grow">
+            <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.title}</h3>
+            <p className="text-xs text-muted-foreground mb-1">{product.tags?.[0] ?? ""}</p>
+            <div className="flex items-center justify-between mt-auto">
+              <p className="text-sm font-medium">${getProductPrice(product).toFixed(2)}</p>
+              {allSoldOut && (
+                <span className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground border border-muted-foreground/30 px-2 py-1">Sold Out</span>
+              )}
+            </div>
+          </div>
+        </Link>
+      );
+    });
 
   const renderStaticProducts = () =>
     staticProducts.map((product) => (

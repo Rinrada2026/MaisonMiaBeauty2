@@ -93,7 +93,12 @@ export default function Home() {
                   <div className="p-4 flex flex-col relative">
                     <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.title}</h3>
                     <p className="text-xs text-muted-foreground mb-1">{product.tags?.[0] ?? ""}</p>
-                    <p className="text-sm font-medium">${getProductPrice(product).toFixed(2)}</p>
+                    <div className="flex items-center justify-between mt-1">
+                      <p className="text-sm font-medium">${getProductPrice(product).toFixed(2)}</p>
+                      {product.variants.edges.every(({ node }) => !node.availableForSale) && (
+                        <span className="text-[9px] font-semibold uppercase tracking-widest text-muted-foreground border border-muted-foreground/30 px-2 py-1">Sold Out</span>
+                      )}
+                    </div>
                   </div>
                 </Link>
               ))}
