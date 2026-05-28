@@ -1,30 +1,32 @@
 import { Feather, Heart, Rabbit, Truck, Plus } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { products } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
+import { getProductPrice, getProductImage, getFirstVariantId } from "@/lib/shopify";
 
 export default function Home() {
   const [, setLocation] = useLocation();
   const { addItem } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { products: shopifyProducts, loading } = useShopifyProducts();
 
   const handleAddToCart = (e: React.MouseEvent, product: any) => {
     e.preventDefault();
     e.stopPropagation();
     addItem({
-      productId: product.id,
-      variantId: "",
-      name: product.name,
-      style: product.style,
-      price: product.price,
+      productId: product.handle,
+      variantId: getFirstVariantId(product) ?? "",
+      name: product.title,
+      style: product.tags?.[0] ?? "",
+      price: getProductPrice(product),
       quantity: 1,
-      image: product.image
+      image: getProductImage(product),
     });
   };
 
-  const bestSellers = products.filter(p => ["velvet-kiss", "angel", "daydream", "doll-eye"].includes(p.id));
+  const bestSellers = shopifyProducts.slice(0, 4);
 
   return (
     <main className="pb-20">
@@ -82,31 +84,41 @@ export default function Home() {
         </div>
 
         <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar pl-6 pr-6 pb-4 -mr-6 gap-4">
-          {bestSellers.map((product) => (
-            <Link key={product.id} href={`/product/${product.id}`} className="snap-start shrink-0 w-[65vw] sm:w-[30vw] md:w-[22vw] flex flex-col group relative bg-white">
-              <div className="relative aspect-square overflow-hidden bg-secondary">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover mix-blend-multiply" />
-                <button
-                  className={`absolute top-3 right-3 p-1.5 bg-white rounded-full shadow-sm z-10 ${isFavorite(product.id) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite({ productId: product.id, variantId: "", name: product.name, style: product.style, price: product.price, image: product.image }); }}
-                >
-                  <Heart className="w-4 h-4" fill={isFavorite(product.id) ? "currentColor" : "none"} />
-                </button>
-              </div>
-              <div className="p-4 flex flex-col relative">
-                <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.name}</h3>
-                <p className="text-xs text-muted-foreground mb-1">{product.style}</p>
-                <p className="text-sm font-medium">${product.price.toFixed(2)}</p>
-                
-                <button 
-                  onClick={(e) => handleAddToCart(e, product)}
-                  className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
-            </Link>
-          ))}
+          {loading
+            ? [1, 2, 3, 4].map((i) => (
+                <div key={i} className="snap-start shrink-0 w-[65vw] sm:w-[30vw] md:w-[22vw] flex flex-col bg-white animate-pulse">
+                  <div className="aspect-square bg-secondary" />
+                  <div className="p-4 flex flex-col gap-2">
+                    <div className="h-3 bg-secondary rounded w-2/3" />
+                    <div className="h-3 bg-secondary rounded w-1/2" />
+                    <div className="h-4 bg-secondary rounded w-1/4 mt-1" />
+                  </div>
+                </div>
+              ))
+            : bestSellers.map((product) => (
+                <Link key={product.id} href={`/product/${product.handle}`} className="snap-start shrink-0 w-[65vw] sm:w-[30vw] md:w-[22vw] flex flex-col group relative bg-white">
+                  <div className="relative aspect-square overflow-hidden bg-secondary">
+                    <img src={getProductImage(product)} alt={product.title} className="w-full h-full object-cover mix-blend-multiply" />
+                    <button
+                      className={`absolute top-3 right-3 p-1.5 bg-white rounded-full shadow-sm z-10 ${isFavorite(product.handle) ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavorite({ productId: product.handle, variantId: getFirstVariantId(product) ?? "", name: product.title, style: product.tags?.[0] ?? "", price: getProductPrice(product), image: getProductImage(product) }); }}
+                    >
+                      <Heart className="w-4 h-4" fill={isFavorite(product.handle) ? "currentColor" : "none"} />
+                    </button>
+                  </div>
+                  <div className="p-4 flex flex-col relative">
+                    <h3 className="text-xs font-medium tracking-[0.15em] uppercase mb-1">{product.title}</h3>
+                    <p className="text-xs text-muted-foreground mb-1">{product.tags?.[0] ?? ""}</p>
+                    <p className="text-sm font-medium">${getProductPrice(product).toFixed(2)}</p>
+                    <button
+                      onClick={(e) => handleAddToCart(e, product)}
+                      className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/90 transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                </Link>
+              ))}
         </div>
       </section>
 
