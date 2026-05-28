@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useToast } from "@/hooks/use-toast";
-import { useShopifyProduct } from "@/hooks/useShopifyProducts";
+import { useShopifyProduct, useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { getProductPrice, getProductImage, ShopifyVariant } from "@/lib/shopify";
+import { Link } from "wouter";
 import { products as staticProducts } from "@/data/products";
 
 export default function ProductDetail() {
@@ -18,6 +19,8 @@ export default function ProductDetail() {
   const [activeTab, setActiveTab] = useState<"details" | "shipping" | null>(null);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState<string | null>(null);
+  const { products: allProducts } = useShopifyProducts();
+  const relatedProducts = allProducts.filter((p) => p.handle !== id).slice(0, 5);
 
   const { product: shopifyProduct, loading } = useShopifyProduct(id);
   const staticProduct = staticProducts.find((p) => p.id === id);
@@ -309,7 +312,32 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      <section className="bg-white border-y border-border grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border mt-16 max-w-6xl mx-auto">
+      {relatedProducts.length > 0 && (
+        <section className="mt-12 px-4 pb-8">
+          <h2 className="text-center font-serif text-xl uppercase tracking-widest mb-6">You May Also Love</h2>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            {relatedProducts.map((product) => (
+              <Link
+                key={product.id}
+                href={`/product/${product.handle}`}
+                className="shrink-0 w-[140px] flex flex-col gap-2"
+              >
+                <div className="w-[140px] h-[140px] bg-secondary overflow-hidden rounded-sm">
+                  <img
+                    src={getProductImage(product)}
+                    alt={product.title}
+                    className="w-full h-full object-cover mix-blend-multiply"
+                  />
+                </div>
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-foreground leading-tight">{product.title}</p>
+                <p className="text-[11px] text-muted-foreground">${getProductPrice(product).toFixed(2)} AUD</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="bg-white border-y border-border grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border mt-4 max-w-6xl mx-auto">
         <div className="flex flex-col items-center text-center p-6 gap-3">
           <Feather className="w-6 h-6 text-foreground" strokeWidth={1} />
           <span className="text-[9px] font-medium tracking-widest uppercase">LIGHTWEIGHT COMFORT</span>
