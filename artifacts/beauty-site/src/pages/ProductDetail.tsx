@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useToast } from "@/hooks/use-toast";
 import { useShopifyProduct, useShopifyProducts } from "@/hooks/useShopifyProducts";
-import { getProductPrice, getProductImage, ShopifyVariant } from "@/lib/shopify";
+import { getProductPrice, getProductImage, ShopifyVariant, createCheckout } from "@/lib/shopify";
 import { Link } from "wouter";
 import { products as staticProducts } from "@/data/products";
 
@@ -19,6 +19,7 @@ export default function ProductDetail() {
   const [activeTab, setActiveTab] = useState<"details" | "shipping" | null>(null);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState<string | null>(null);
+  const [isApplePayLoading, setIsApplePayLoading] = useState(false);
   const { products: allProducts } = useShopifyProducts();
   const relatedProducts = allProducts.filter((p) => p.handle !== id).slice(0, 5);
 
@@ -43,6 +44,21 @@ export default function ProductDetail() {
     ? (shopifyProduct.variants.edges.find(({ node }) => node.id === selectedVariantId)?.node ??
        shopifyProduct.variants.edges[0]?.node ?? null)
     : null;
+
+  const handleApplePay = async () => {
+    if (!selectedVariant?.availableForSale) return;
+    const variantId = selectedVariant?.id ?? shopifyProduct?.variants.edges[0]?.node.id;
+    if (!variantId) return;
+    setIsApplePayLoading(true);
+    try {
+      const checkoutUrl = await createCheckout([{ merchandiseId: variantId, quantity }]);
+      window.location.href = checkoutUrl;
+    } catch {
+      toast({ title: "Checkout error", description: "Could not start checkout. Please try again." });
+    } finally {
+      setIsApplePayLoading(false);
+    }
+  };
 
   const handleAddToCart = () => {
     if (shopifyProduct && selectedVariant) {
@@ -249,8 +265,12 @@ export default function ProductDetail() {
             >
               {selectedVariant && !selectedVariant.availableForSale ? "SOLD OUT" : "ADD TO CART"}
             </Button>
-            <Button className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-none flex items-center justify-center gap-2">
-              Buy with <span className="font-bold tracking-tight text-sm">Apple Pay</span>
+            <Button
+              className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-none flex items-center justify-center gap-2 disabled:opacity-60"
+              onClick={handleApplePay}
+              disabled={isApplePayLoading || (selectedVariant ? !selectedVariant.availableForSale : false)}
+            >
+              {isApplePayLoading ? "REDIRECTING..." : <>Buy with <span className="font-bold tracking-tight text-sm">Apple Pay</span></>}
             </Button>
           </div>
 

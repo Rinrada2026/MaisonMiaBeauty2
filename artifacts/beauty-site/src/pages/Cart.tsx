@@ -117,7 +117,11 @@ export default function Cart() {
                 >
                   {isCheckingOut ? "REDIRECTING..." : "CHECKOUT"}
                 </Button>
-                <Button className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-none flex items-center justify-center gap-2">
+                <Button
+                  className="w-full h-12 bg-black hover:bg-black/90 text-white rounded-none flex items-center justify-center gap-2 disabled:opacity-60"
+                  onClick={checkout}
+                  disabled={isCheckingOut}
+                >
                   Buy with <span className="font-bold tracking-tight text-sm">Apple Pay</span>
                 </Button>
               </div>
