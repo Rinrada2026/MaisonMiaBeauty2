@@ -44,7 +44,7 @@ export default function Shop() {
   const activeFilterCount = (availFilter !== "all" ? 1 : 0);
 
   return (
-    <main className="pb-32 bg-background min-h-screen">
+    <main className="pb-32 pt-16 bg-background min-h-screen">
       <div className="pt-10 pb-8 text-center px-4 flex flex-col items-center">
         <p className="text-[10px] tracking-[0.2em] font-medium text-primary mb-2 uppercase">COLLECTION</p>
         <h1 className="font-serif text-4xl mb-4">All Lashes</h1>

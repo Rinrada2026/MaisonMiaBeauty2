@@ -36,7 +36,7 @@ export default function Favorites() {
 
   if (favorites.length === 0) {
     return (
-      <main className="min-h-[80vh] flex flex-col items-center justify-center p-6 bg-background">
+      <main className="min-h-[80vh] flex flex-col items-center justify-center p-6 pt-16 bg-background">
         <Heart className="w-12 h-12 text-primary mb-6" strokeWidth={1} />
         <h1 className="font-serif text-4xl mb-4">Your Wishlist</h1>
         <p className="text-muted-foreground mb-8 text-center text-sm">
@@ -52,7 +52,7 @@ export default function Favorites() {
   }
 
   return (
-    <main className="pb-32 bg-background min-h-screen">
+    <main className="pb-32 pt-16 bg-background min-h-screen">
       <div className="pt-10 pb-8 text-center px-4 flex flex-col items-center">
         <p className="text-[10px] tracking-[0.2em] font-medium text-primary mb-2 uppercase">WISHLIST</p>
         <h1 className="font-serif text-4xl mb-4">Your Favourites</h1>

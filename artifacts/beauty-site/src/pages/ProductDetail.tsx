@@ -93,7 +93,7 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <main className="pb-24 bg-background min-h-screen">
+      <main className="pb-24 pt-16 bg-background min-h-screen">
         <div className="px-4 py-4 text-[9px] uppercase tracking-widest text-muted-foreground font-medium">
           HOME &gt; SHOP &gt; LASHES
         </div>
@@ -131,7 +131,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <main className="pb-24 bg-background min-h-screen">
+    <main className="pb-24 pt-16 bg-background min-h-screen">
       <div className="px-4 py-4 text-[9px] uppercase tracking-widest text-muted-foreground font-medium">
         HOME &gt; SHOP &gt; LASHES &gt; <span className="text-foreground">{name}</span>
       </div>
