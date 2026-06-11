@@ -11,12 +11,12 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-16 flex items-center px-4 justify-between overflow-visible" style={{background: "#fbeeee"}} data-testid="header">
+      <header className="sticky top-0 z-50 h-14 flex items-center px-4 justify-between" style={{background: "#fbeeee"}} data-testid="header">
         <div className="flex-1" />
 
         <div className="flex-1 flex justify-center">
           <Link href="/" data-testid="header-logo-link">
-            <img src={logoSrc} alt="Maison Mia" className="h-32 object-contain" style={{ filter: "brightness(0) saturate(100%) invert(63%) sepia(19%) saturate(560%) hue-rotate(302deg) brightness(92%) contrast(88%)" }} />
+            <img src={logoSrc} alt="Maison Mia" className="h-12 object-contain" style={{ filter: "brightness(0) saturate(100%) invert(63%) sepia(19%) saturate(560%) hue-rotate(302deg) brightness(92%) contrast(88%)" }} />
           </Link>
         </div>
 
