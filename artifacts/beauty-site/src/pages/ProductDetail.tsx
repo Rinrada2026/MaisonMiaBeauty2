@@ -175,7 +175,7 @@ export default function ProductDetail() {
             }
           </div>
 
-          {shopifyProduct && shopifyProduct.variants.edges.length > 0 && (
+          {shopifyProduct && shopifyProduct.variants.edges.length > 1 && (
             <div className="mb-6">
               <p className="text-[10px] font-semibold uppercase tracking-widest mb-3 text-foreground">CHOOSE YOUR OPTION</p>
               <div className="flex flex-col gap-3">
