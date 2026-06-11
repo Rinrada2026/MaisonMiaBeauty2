@@ -119,7 +119,6 @@ export default function ProductDetail() {
   const style = shopifyProduct?.tags?.[0] ?? staticProduct?.style ?? "";
   const badge = shopifyProduct?.tags?.includes("best-seller") ? "BEST SELLER" : shopifyProduct?.tags?.includes("new") ? "NEW" : staticProduct?.badge ?? null;
   const productImages = shopifyProduct?.images.edges.map((e) => e.node.url) ?? [defaultImage];
-  const allImages = productImages.length >= 4 ? productImages.slice(0, 4) : [...productImages, ...Array(Math.max(0, 4 - productImages.length)).fill(defaultImage)];
 
   const mainImage = variantImage ?? activeImage ?? defaultImage;
 
@@ -138,17 +137,19 @@ export default function ProductDetail() {
           <div className="aspect-square bg-secondary w-full relative overflow-hidden">
             <img src={mainImage} alt={name} className="w-full h-full object-cover mix-blend-multiply transition-opacity duration-300" />
           </div>
-          <div className="grid grid-cols-4 gap-2">
-            {allImages.map((img, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveImage(img)}
-                className={`aspect-square bg-secondary border transition-colors ${mainImage === img ? "border-primary" : "border-transparent hover:border-primary/50"}`}
-              >
-                <img src={img} alt="" className="w-full h-full object-cover mix-blend-multiply" />
-              </button>
-            ))}
-          </div>
+          {productImages.length > 1 && (
+            <div className="grid grid-cols-4 gap-2">
+              {productImages.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveImage(img)}
+                  className={`aspect-square bg-secondary border-2 transition-colors ${mainImage === img ? "border-primary" : "border-transparent hover:border-primary/50"}`}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover mix-blend-multiply" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="w-full md:w-1/2 flex flex-col">
