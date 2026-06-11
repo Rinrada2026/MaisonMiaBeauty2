@@ -19,7 +19,7 @@ export default function Home() {
         <img src="/images/hero.png" alt="Hero" className="absolute inset-0 w-full h-full object-cover object-[62%_top]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#fbeeee]/90 via-[#fbeeee]/55 to-transparent" />
 
-        <p className="absolute top-5 left-6 z-10 text-primary text-[9px] sm:text-[10px] tracking-[0.22em] font-semibold uppercase">Enhance. Elevate. Empower.</p>
+        <p className="absolute top-5 left-0 right-0 z-10 text-center text-primary text-[9px] sm:text-[10px] tracking-[0.22em] font-semibold uppercase">Enhance. Elevate. Empower.</p>
 
         <div className="relative z-10 h-full flex flex-col justify-start pt-60 px-6 sm:px-10 w-[55%] sm:w-[48%]">
           <h1 className="font-serif text-[1.9rem] sm:text-4xl md:text-5xl leading-[1.08] text-foreground mb-4">
