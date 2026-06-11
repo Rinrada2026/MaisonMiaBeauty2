@@ -21,7 +21,7 @@ export default function Home() {
 
         <p className="absolute top-5 left-6 z-10 text-primary text-[9px] sm:text-[10px] tracking-[0.22em] font-semibold uppercase">Enhance. Elevate. Empower.</p>
 
-        <div className="relative z-10 h-full flex flex-col justify-start pt-44 px-6 sm:px-10 w-[55%] sm:w-[48%]">
+        <div className="relative z-10 h-full flex flex-col justify-start pt-52 px-6 sm:px-10 w-[55%] sm:w-[48%]">
           <h1 className="font-serif text-[1.9rem] sm:text-4xl md:text-5xl leading-[1.08] text-foreground mb-4">
             Effortless<br />Beauty,<br />Every Day
           </h1>
