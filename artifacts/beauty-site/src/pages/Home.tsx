@@ -107,8 +107,8 @@ export default function Home() {
 
       {/* Secondary Banner */}
       <section className="grid grid-cols-1 md:grid-cols-2 bg-secondary">
-        <div className="aspect-[4/3] md:aspect-auto md:h-full relative overflow-hidden order-1 md:order-none">
-          <img src="/images/banner.png" alt="Lashes" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="aspect-square md:aspect-auto md:h-full relative overflow-hidden order-1 md:order-none">
+          <img src="/images/banner.png" alt="Lashes" className="absolute inset-0 w-full h-full object-cover object-center" />
         </div>
         <div className="flex flex-col justify-center items-start p-10 sm:p-16">
           <p className="text-[10px] tracking-[0.2em] font-medium mb-3 uppercase text-primary">BE YOUR OWN STANDARD</p>
