@@ -16,7 +16,7 @@ export default function Header() {
 
         <div className="flex-1 flex justify-center">
           <Link href="/" data-testid="header-logo-link">
-            <img src={logoSrc} alt="Maison Mia" className="h-12 object-contain" style={{ filter: "brightness(0) saturate(100%) invert(63%) sepia(19%) saturate(560%) hue-rotate(302deg) brightness(92%) contrast(88%)" }} />
+            <img src={logoSrc} alt="Maison Mia" className="h-16 object-contain" style={{ filter: "brightness(0) saturate(100%) invert(63%) sepia(19%) saturate(560%) hue-rotate(302deg) brightness(92%) contrast(88%)" }} />
           </Link>
         </div>
 
