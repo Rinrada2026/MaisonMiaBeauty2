@@ -32,6 +32,10 @@ export default function ProductDetail() {
     }
   }, [shopifyProduct]);
 
+  useEffect(() => {
+    setActiveImage(null);
+  }, [selectedVariantId]);
+
   const getVariantDisplayName = (variant: ShopifyVariant): string => {
     const title = variant.title;
     if (!title || title === "Default Title" || /^\d+(\.\d+)?$/.test(title.trim())) {
@@ -120,7 +124,7 @@ export default function ProductDetail() {
   const badge = shopifyProduct?.tags?.includes("best-seller") ? "BEST SELLER" : shopifyProduct?.tags?.includes("new") ? "NEW" : staticProduct?.badge ?? null;
   const productImages = shopifyProduct?.images.edges.map((e) => e.node.url) ?? [defaultImage];
 
-  const mainImage = variantImage ?? activeImage ?? defaultImage;
+  const mainImage = activeImage ?? variantImage ?? defaultImage;
 
   if (!shopifyProduct && !staticProduct) {
     return <div className="p-20 text-center">Product not found</div>;
