@@ -12,7 +12,7 @@ export default function Cart() {
 
   if (items.length === 0) {
     return (
-      <main className="min-h-[80vh] flex flex-col items-center justify-center p-6 pt-16 bg-background">
+      <main className="min-h-[80vh] flex flex-col items-center justify-center p-6 bg-background">
         <h1 className="font-serif text-4xl mb-4">Your Cart</h1>
         <p className="text-muted-foreground mb-8 text-center">Your cart is currently empty.</p>
         <Link href="/shop">
@@ -25,7 +25,7 @@ export default function Cart() {
   }
 
   return (
-    <main className="pb-32 pt-16 bg-background min-h-screen">
+    <main className="pb-32 bg-background min-h-screen">
       <div className="max-w-4xl mx-auto px-4 pt-10">
         
         {/* Header */}
