@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-20 flex items-center px-4 justify-between" style={{background: "#fbeeee"}} data-testid="header">
+      <header className="sticky top-0 z-50 h-12 flex items-center px-4 justify-between overflow-visible" style={{background: "#fbeeee"}} data-testid="header">
         <div className="flex-1" />
 
         <div className="flex-1 flex justify-center">
