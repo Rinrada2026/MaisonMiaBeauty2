@@ -15,23 +15,23 @@ export default function Home() {
   return (
     <main className="pb-20">
       {/* Hero */}
-      <section className="relative w-full aspect-[4/5] sm:aspect-video md:aspect-[21/9] overflow-hidden bg-white">
-        <img src="/images/hero.png" alt="Hero" className="absolute inset-0 w-full h-full object-cover object-[70%_center]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent w-full md:w-3/4" />
-        
+      <section className="relative w-full aspect-[4/5] sm:aspect-video md:aspect-[21/9] overflow-hidden bg-[#f8e8e8]">
+        <img src="/images/hero.png" alt="Hero" className="absolute inset-0 w-full h-full object-cover object-[center_top]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fdf0f0]/95 via-[#fdf0f0]/70 to-transparent w-full md:w-2/3" />
+
         <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 max-w-lg">
-          <p className="text-primary text-[10px] sm:text-xs tracking-[0.2em] font-medium mb-4">ENHANCE. ELEVATE. EMPOWER.</p>
+          <p className="text-primary text-[10px] sm:text-xs tracking-[0.25em] font-semibold mb-4 uppercase">Enhance. Elevate. Empower.</p>
           <h1 className="font-serif text-[2.75rem] sm:text-6xl leading-[1.05] text-foreground mb-4">
-            Effortless Beauty,<br />Every Day
+            Your Lashes,<br />Your Power.
           </h1>
-          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-8 max-w-sm">
-            Premium lashes designed to enhance your natural beauty and boost your confidence.
+          <p className="text-foreground/60 text-sm sm:text-base leading-relaxed mb-8 max-w-sm">
+            Effortless lash kits designed for your most glamorous, confident self.
           </p>
           <div className="flex flex-col gap-3">
             <Button className="w-full sm:w-64 h-12 bg-primary hover:bg-primary/90 text-white rounded-none tracking-widest text-xs uppercase" onClick={() => setLocation("/shop")}>
               SHOP LASHES
             </Button>
-            <Button variant="outline" className="w-full sm:w-64 h-12 rounded-none tracking-widest text-xs uppercase border-border" onClick={() => setLocation("/shop")}>
+            <Button variant="outline" className="w-full sm:w-64 h-12 rounded-none tracking-widest text-xs uppercase border-foreground/20 text-foreground hover:bg-foreground/5" onClick={() => setLocation("/shop")}>
               BEST SELLERS
             </Button>
           </div>
