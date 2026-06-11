@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-border h-16 flex items-center px-4 justify-between overflow-visible" data-testid="header">
+      <header className="sticky top-0 z-50 bg-white h-16 flex items-center px-4 justify-between overflow-visible" data-testid="header">
         <div className="flex-1" />
 
         <div className="flex-1 flex justify-center">
