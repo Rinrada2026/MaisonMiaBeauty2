@@ -363,22 +363,23 @@ export default function ProductDetail() {
         </section>
       )}
 
-      <section className="bg-white border-y border-border grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-border mt-4 max-w-6xl mx-auto">
-        <div className="flex flex-col items-center text-center p-6 gap-3">
-          <Feather className="w-6 h-6 text-foreground" strokeWidth={1} />
-          <span className="text-[9px] font-medium tracking-widest uppercase">LIGHTWEIGHT COMFORT</span>
-        </div>
-        <div className="flex flex-col items-center text-center p-6 gap-3">
-          <Heart className="w-6 h-6 text-foreground" strokeWidth={1} />
-          <span className="text-[9px] font-medium tracking-widest uppercase">HANDCRAFTED QUALITY</span>
-        </div>
-        <div className="flex flex-col items-center text-center p-6 gap-3">
-          <Rabbit className="w-6 h-6 text-foreground" strokeWidth={1} />
-          <span className="text-[9px] font-medium tracking-widest uppercase">CRUELTY FREE</span>
-        </div>
-        <div className="flex flex-col items-center text-center p-6 gap-3">
-          <ShieldCheck className="w-6 h-6 text-foreground" strokeWidth={1} />
-          <span className="text-[9px] font-medium tracking-widest uppercase">FAST AUSTRALIA SHIPPING</span>
+      <section className="grid grid-cols-2 md:grid-cols-4 mt-4 max-w-6xl mx-auto" style={{background: "linear-gradient(135deg, #f9e8e8 0%, #fdf0ee 40%, #f5e0e8 100%)"}}>
+        {[
+          { icon: <Feather className="w-5 h-5" strokeWidth={1.2} />, label: "LIGHTWEIGHT COMFORT" },
+          { icon: <Heart className="w-5 h-5" strokeWidth={1.2} />, label: "HANDCRAFTED QUALITY" },
+          { icon: <Rabbit className="w-5 h-5" strokeWidth={1.2} />, label: "CRUELTY FREE" },
+          { icon: <ShieldCheck className="w-5 h-5" strokeWidth={1.2} />, label: "FAST AUSTRALIA SHIPPING" },
+        ].map((item, i) => (
+          <div key={i} className="flex flex-col items-center text-center px-4 py-6 gap-3 backdrop-blur-sm"
+            style={{background: "rgba(255,240,242,0.45)", borderRight: i < 3 ? "1px solid rgba(185,122,139,0.15)" : "none"}}>
+            <div className="w-9 h-9 rounded-full flex items-center justify-center"
+              style={{background: "rgba(255,255,255,0.6)", boxShadow: "0 2px 12px rgba(185,122,139,0.12)"}}>
+              <span style={{color: "#B97A8B"}}>{item.icon}</span>
+            </div>
+            <span className="text-[9px] font-semibold tracking-widest uppercase" style={{color: "#9a6070"}}>{item.label}</span>
+          </div>
+        ))}
+        <div className="hidden">{/* legacy closing div placeholder */}
         </div>
       </section>
     </main>
