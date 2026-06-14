@@ -34,6 +34,7 @@ export interface ShopifyVariant {
   title: string;
   availableForSale: boolean;
   price: { amount: string };
+  compareAtPrice?: { amount: string } | null;
   selectedOptions: { name: string; value: string }[];
   image?: { url: string; altText: string | null } | null;
 }
@@ -102,6 +103,9 @@ const PRODUCT_FRAGMENT = `
           title
           availableForSale
           price {
+            amount
+          }
+          compareAtPrice {
             amount
           }
           selectedOptions {

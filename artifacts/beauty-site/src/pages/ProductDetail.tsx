@@ -116,6 +116,10 @@ export default function ProductDetail() {
     : shopifyProduct
     ? getProductPrice(shopifyProduct)
     : (staticProduct?.price ?? 0);
+  const compareAtPrice = selectedVariant?.compareAtPrice
+    ? parseFloat(selectedVariant.compareAtPrice.amount)
+    : null;
+  const isOnSale = compareAtPrice !== null && compareAtPrice > price;
   const defaultImage = shopifyProduct ? getProductImage(shopifyProduct) : (staticProduct?.image ?? "");
   const variantImage = selectedVariant?.image?.url ?? null;
   const description = shopifyProduct?.description ?? staticProduct?.description ?? "";
@@ -164,7 +168,12 @@ export default function ProductDetail() {
           )}
 
           <h1 className="font-serif text-4xl uppercase mb-2">{name}</h1>
-          <p className="text-lg font-medium mb-3">${price.toFixed(2)} AUD</p>
+          <div className="flex items-center gap-3 mb-3">
+            <p className={`text-lg font-medium ${isOnSale ? "text-primary" : ""}`}>${price.toFixed(2)} AUD</p>
+            {isOnSale && (
+              <p className="text-sm text-muted-foreground line-through">${compareAtPrice!.toFixed(2)} AUD</p>
+            )}
+          </div>
 
 
           <div className="text-sm leading-relaxed mb-8">
