@@ -16,7 +16,7 @@ export default function Home() {
     <main className="pb-20">
       {/* Hero */}
       <section className="relative w-full aspect-[2/3] sm:aspect-[4/5] md:aspect-video overflow-hidden bg-[#f9eaea]">
-        <img src="/images/hero.png" alt="Hero" className="absolute inset-0 w-full h-full object-cover object-[62%_top]" />
+        <img src="/images/hero.jpg" alt="Hero" className="absolute inset-0 w-full h-full object-cover object-[62%_top]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#fbeeee]/90 via-[#fbeeee]/55 to-transparent" />
 
         <p className="absolute top-5 left-0 right-0 z-10 text-center text-primary text-[9px] sm:text-[10px] tracking-[0.22em] font-semibold uppercase">Enhance. Elevate. Empower.</p>
